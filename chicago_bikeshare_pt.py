@@ -13,8 +13,8 @@ with open("chicago.csv", "r") as file_read:
     data_list = list(reader)
 print("Ok!")
 print("Cabeçalhos:")
-cabeçalho = data_list[0]
-print(cabeçalho)
+cabecalho = data_list[0]
+print(cabecalho)
 input("Aperte Enter começar a avaliar o teste...")
 
 
@@ -37,15 +37,15 @@ input("Aperte Enter para ir para a tarefa 3...")
 
 # TAREFA 3
 # TODO: Crie uma função para adicionar as colunas(features) de uma lista em outra lista, na mesma ordem
-"""
-Função para pegar todos os dados de uma coluna desejada através de seu índice.
-    Argumentos:
-        data  : O array com os dados extraidos do csv .
-        index : O indíce da coluna.
-    Retorna:
-        Uma lista com os valores da coluna.
-"""
 def column_to_list(data, index):
+    """
+        Função para pegar todos os dados de uma coluna desejada através de seu índice.
+            Argumentos:
+                data  : O array com os dados extraidos do csv .
+                index : O indíce da coluna.
+            Retorna:
+                Uma lista com os valores da coluna.
+    """
     column_list = [linha[index] for linha in data]
     return column_list
 
@@ -83,14 +83,14 @@ input("Aperte Enter para ir para a tarefa 5...")
 # TAREFA 5
 # TODO: Crie uma função para contar os gêneros. Retorne uma lista.
 # Isso deveria retornar uma lista com [count_male, count_female] (exemplo: [10, 15] significa 10 Masculinos, 15 Femininos)
-"""
-Função para contar a quantidade de genêros.
-    Argumentos:
-        data_list  : O array com os dados extraidos do csv .
-    Retorna:
-        Uma lista com os valores da quantidade de generos masculinos e femeninos.
-"""
 def count_gender(data):
+    """
+        Função para contar a quantidade de genêros.
+            Argumentos:
+                data  : O array com os dados extraidos do csv .
+            Retorna:
+                Uma lista com os valores da quantidade de generos masculinos e femeninos.
+    """
     male = 0
     female = 0
     for linha in data:
@@ -114,24 +114,18 @@ input("Aperte Enter para ir para a tarefa 6...")
 # TAREFA 6
 # TODO: Crie uma função que pegue o gênero mais popular, e retorne este gênero como uma string.
 # Esperamos ver "Male", "Female", ou "Equal" como resposta.
-"""
-Função para pegar o gênero mais popular.
-    Argumentos:
-        data_list  : O array com os dados extraidos do csv.
-    Retorna:
-        Uma string a resposta sobre qual é o genero mais popular.
-"""
 def most_popular_gender(data):
-    male = 0
-    female = 0
-    for linha in data:
-        if linha[6] == "Male":
-            male += 1
-        elif linha[6] == "Female":
-            female +=1
-    if male == female:
+    """
+        Função para pegar o gênero mais popular.
+            Argumentos:
+                data_list  : O array com os dados extraidos do csv.
+            Retorna:
+                Uma string a resposta sobre qual é o genero mais popular.
+    """
+    result = count_gender(data)
+    if result[0] == result[1]:
         return "Equal"
-    elif male > female:
+    elif result[0] > result[1]:
         return  "Male"
     else:
         return "Female"
@@ -147,15 +141,15 @@ input("Aperte Enter para ir para a tarefa 7...")
 
 # TAREFA 7
 # TODO: Crie um gráfico similar para user_types. Tenha certeza que a legenda está correta.
-"""
-Função para pegar os tipos de usuários para exebição em grafíco .
-    Argumentos:
-        data  : O  array com os dados extraidos do csv.
-        types : Um array tipos de usuários.
-    Retorna:
-        Uma array com os valores da contagem de tipos de usuários.
-"""
 def user_type_graph(data,types):
+    """
+        Função para pegar os tipos de usuários para exebição em grafíco .
+            Argumentos:
+                data  : O  array com os dados extraidos do csv.
+                types : Um array tipos de usuários.
+            Retorna:
+                Uma array com os valores da contagem de tipos de usuários.
+    """
     tipos = {}
     for linha in data:
         for tipo in types:
@@ -163,14 +157,14 @@ def user_type_graph(data,types):
                 tipos[tipo] = tipos.get(tipo,0) + 1
             else :  
                 tipos[tipo] = tipos.get(tipo,0) + 0 #Atribuindo 0 para preservar a ordem das quantidades dos tipos que são passados no eixo x  
-    return tipos
+    return tipos.values()
 
 print("\nTAREFA 7: Verifique o gráfico!")
 user_type_list = column_to_list(data_list, -3)
 types = list(dict(zip(user_type_list, user_type_list)).keys()) #Usei esse tipo de chamada pois não conhecia o set() apresendato posteriormente e apresentou um gráfico mais agradavel
 quantity = user_type_graph(data_list,types)
 y_pos = list(range(len(types)))
-plt.bar(y_pos, quantity.values())
+plt.bar(y_pos, quantity)
 plt.ylabel('Quantidade')
 plt.xlabel('Tipos de Usuários')
 plt.xticks(y_pos, types)
@@ -196,14 +190,14 @@ input("Aperte Enter para ir para a tarefa 9...")
 # TAREFA 9
 # TODO: Ache a duração de viagem Mínima, Máxima, Média, e Mediana.
 # Você não deve usar funções prontas para isso, como max() e min().
-"""
-Função para pegar a mediana da lista  .
-    Argumentos:
-        lista_tratada : O array com os dados extraidos do csv.
-    Retorna:
-        O valor da mediana em formato int .
-"""
-def mediana(lista_tratada):    
+def mediana(lista_tratada):
+    """
+        Função para pegar a mediana da lista  .
+            Argumentos:
+                lista_tratada : O array com os dados extraidos do csv.
+            Retorna:
+                O valor da mediana em formato int .
+    """
     lista_tratada.sort() 
     lstLen= len(lista_tratada) 
     index = lstLen // 2 
@@ -211,15 +205,48 @@ def mediana(lista_tratada):
         return lista_tratada[index] 
     else: 
         return (lista_tratada[index] + lista_tratada[index - 1]) / 2
+def count_min_max(lista_tratada,operacao):
+    """
+        Função para procurar o valor maior ou menor da lista.
+            Argumentos:
+                lista_tratada : O array com os dados extraidos do csv.
+                operacao      : Recebe um valor int que determina se operação é min ou max
+            Retorna:
+                O valor maior da lista.
+    """
+    ini = lista_tratada[0]
+    for valor in lista_tratada:
+        if(operacao == 0):
+            if valor < ini:
+                ini = valor
+        else:
+            if valor > ini:
+                ini = valor
+    return ini
+
+def mean_list(lista_tratada):
+    """
+        Função calcular a média dos valores da lista.
+            Argumentos:
+                lista_tratada : O array com os dados extraidos do csv.
+            Retorna:
+                O valor média dos valores.
+    """
+    stack = 0
+    index = 0
+    for valor in lista_tratada:
+        stack += valor
+        index += 1 
+    return math.ceil(stack/index)
 
 trip_duration_list = column_to_list(data_list, 2)
 #Tratando a lista para poder usar as funções de max e min (que no caso fiquei na dúvida se podia usar ou não ) 
 #Usei pois percebi que dava para reduzir código evitando criar duas micro-funções  
 lista_tratada = [int(valor) for valor in trip_duration_list]
-min_trip = min(lista_tratada)
-max_trip = max(lista_tratada)
+min_trip = count_min_max(lista_tratada,0)
+max_trip = count_min_max(lista_tratada,1)
 median_trip = mediana(lista_tratada)
-mean_trip = math.ceil(sum(lista_tratada) / len(trip_duration_list))
+mean_trip = mean_list(lista_tratada) 
 print("\nTAREFA 9: Imprimindo o mínimo, máximo, média, e mediana")
 print("Min: ", min_trip, "Max: ", max_trip, "Média: ", mean_trip, "Mediana: ", median_trip)
 # ------------ NÃO MUDE NENHUM CÓDIGO AQUI ------------
@@ -261,19 +288,26 @@ input("Aperte Enter para ir para a tarefa 12...")
 # para que nós possamos usar essa função com outra categoria de dados.
 print("Você vai encarar o desafio? (yes ou no)")
 answer = "yes"
-"""
-Função para contar items para o desafio.
-    Argumentos:
-        column_list: Os dados da coluna do desafio.
-    Retorna:
-        Uma lista de listas sendo item_types os tipos de valores da coluna e count_items valores para a soma do desafio.
-"""
+
 def count_items(column_list):
-    item_types = []
-    count_items = []
-    item_types = set(column_list)
-    count_items = [1 for linha in column_list]
-    return item_types, count_items
+    """
+    Função para contar items para o desafio.
+        Argumentos:
+            column_list: Os dados da coluna do desafio.
+        Retorna:
+            Uma lista de listas sendo item_types os tipos de valores da coluna e count_items valores para a soma do desafio.
+    """
+    item_types  = []
+    count_items = {}
+    item_types  = set(column_list) 
+    for itens in column_list:
+        for tipo in item_types:  
+            if tipo == itens:
+                count_items[tipo] = count_items.get(tipo,0) + 1
+
+    print(count_items)
+    return item_types, count_items.values()
+
 if answer == "yes":
     # ------------ NÃO MUDE NENHUM CÓDIGO AQUI ------------
     column_list = column_to_list(data_list, -2)
